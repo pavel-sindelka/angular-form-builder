@@ -1,0 +1,4 @@
+<div [formGroup]="formGroup" class="form-group" [ngClass]="class" [class.has-error]="hasError">
+  <label class="control-label" [for]="formControlName">{{label}}</label>
+  <input type="text" class="form-control" [id]="formControlName" [formControlName]="formControlName">
+</div>

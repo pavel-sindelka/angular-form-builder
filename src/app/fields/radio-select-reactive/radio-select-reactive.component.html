@@ -1,0 +1,9 @@
+<div [formGroup]="formGroup" class="form-group" [ngClass]="class" [class.has-error]="hasError">
+  <label class="control-label" [for]="formControlName">{{label}}</label>
+  <br>
+  <label class="control-label radio-inline" *ngFor="let option of options">
+    {{option.name}}
+    <input type="radio" [value]="option.id" [formControlName]="formControlName">
+    <span class="checkmark"></span>
+  </label>
+</div>

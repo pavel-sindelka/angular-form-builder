@@ -1,0 +1,7 @@
+<div class="form-group" [formGroup]="formGroup" [ngClass]="class" [class.has-error]="hasError">
+  <label class="control-label" [for]="formControlName">{{label}}</label>
+  <select class="form-control" [id]="formControlName" [formControlName]="formControlName">
+    <option value="">Select option...</option>
+    <option *ngFor="let option of options" [value]="option.id">{{option.name}}</option>
+  </select>
+</div>

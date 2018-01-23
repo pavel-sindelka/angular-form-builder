@@ -1,0 +1,30 @@
+<div class="form-group text-center">
+  <button class="btn btn-default btn-lg" routerLink="form">Start questionnaire</button>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Age Category</th>
+      <th>Sex</th>
+      <th>Favorite Activity</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{user.id}}</td>
+      <td>{{user.firstName}}</td>
+      <td>{{user.lastName}}</td>
+      <td>{{ageCategoryTransform(user.ageCategory)}}</td>
+      <td>{{sexTransform(user.sex)}}</td>
+      <td>{{user.favoriteActivity}}</td>
+      <td>
+        <button class="btn btn-default btn-sm" (click)="edit(user.id)">Edit</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

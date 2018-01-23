@@ -1,0 +1,9 @@
+<form [ngClass]="formClass" #form="ngForm" (ngSubmit)="submit()">
+    <div [ngClass]="formBodyClass">
+        <ng-template #formContent></ng-template>
+    </div>
+
+    <div [ngClass]="formFooterClass" class="form-group">
+        <ng-content></ng-content>
+    </div>
+</form>

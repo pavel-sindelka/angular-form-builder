@@ -1,0 +1,7 @@
+<div class="text-center">
+    <h1>Questionnaire</h1>
+</div>
+
+<form-builder #formBuilder formBodyClass="row" formFooterClass="text-center" (formSubmit)="formSubmitOut()">
+    <button type="submit" class="btn btn-default" [disabled]="!isValid()">{{user.id === '' ? 'Send' : 'Update'}}</button>
+</form-builder>

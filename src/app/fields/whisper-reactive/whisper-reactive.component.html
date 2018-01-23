@@ -1,0 +1,12 @@
+<div class="form-group" [formGroup]="formGroup" [ngClass]="class" [class.has-error]="hasError">
+  <div class="has-feedback" [class.open]="isOpen">
+    <label class="control-label" [for]="formControlName">{{label}}</label>
+    <input type="text" class="form-control" [id]="formControlName" [formControlName]="formControlName" (click)="close()">
+    <span class="glyphicon glyphicon-chevron-down form-control-feedback" (click)="toggle()"></span>
+    <ul class="dropdown-menu">
+      <li *ngFor="let option of filteredOptions" (click)=select(option)>
+        <a href="javascript:;">{{option}}</a>
+      </li>
+    </ul>
+  </div>
+</div>
