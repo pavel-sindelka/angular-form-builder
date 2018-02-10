@@ -1,14 +1,11 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { DynamicComponentUnsubscribeOnDestroy } from '../../component-factory/dynamic-component-unsubscribe-on-destroy';
-
 @Component({
   selector: 'whisper-reactive',
   templateUrl: './whisper-reactive.component.html',
   styleUrls: ['./whisper-reactive.component.sass']
 })
-@DynamicComponentUnsubscribeOnDestroy()
 export class WhisperReactiveComponent {
   @Input() formGroup: FormGroup;
   @Input() formControlName: string;

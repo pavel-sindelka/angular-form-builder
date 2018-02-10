@@ -9,14 +9,11 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-import { DynamicComponentUnsubscribeOnDestroy } from '../../component-factory/dynamic-component-unsubscribe-on-destroy';
-
 @Component({
   selector: 'input-no-reactive',
   templateUrl: './input-no-reactive.component.html',
   styleUrls: ['./input-no-reactive.component.sass']
 })
-@DynamicComponentUnsubscribeOnDestroy()
 export class InputNoReactiveComponent implements OnDestroy {
   @Input() model: string;
   @Input() class: string;

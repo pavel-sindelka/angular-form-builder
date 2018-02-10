@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   OnChanges,
+  OnDestroy,
   Input,
   ViewChild,
   Output,
@@ -40,7 +41,7 @@ export class User implements IUser {
     public ageCategory: string = '',
     public sex: string = '1',
     public favoriteActivity: string = ''
-  ) {}
+  ) { }
 }
 
 @Component({
@@ -48,7 +49,7 @@ export class User implements IUser {
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.sass']
 })
-export class UserFormComponent implements OnInit, OnChanges {
+export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() user: IUser;
   @Input() ageCategories: [any];
   @Input() sexes: [any];
@@ -61,6 +62,8 @@ export class UserFormComponent implements OnInit, OnChanges {
   private activitiesChange: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(
     []
   );
+  private ageCategoryChange;
+
 
   constructor(
     private fb: FormBuilder,
@@ -85,7 +88,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.formGroup
+    this.ageCategoryChange = this.formGroup
       .get('ageCategory')
       .valueChanges.subscribe(id =>
         this.activitiesChange.next(this.findActivities(id))
@@ -93,60 +96,64 @@ export class UserFormComponent implements OnInit, OnChanges {
 
     this.formBuilder
       .addField(
-        this.componentFactory.create(components.input, {
-          inputs: {
-            formGroup: this.formGroup,
-            formControlName: 'firstName',
-            class: 'col-sm-6 col-xs-12',
-            label: 'First Name *'
-          }
-        })
+      this.componentFactory.create(components.input, {
+        inputs: {
+          formGroup: this.formGroup,
+          formControlName: 'firstName',
+          class: 'col-sm-6 col-xs-12',
+          label: 'First Name *'
+        }
+      })
       )
       .addField(
-        this.componentFactory.create(components.input, {
-          inputs: {
-            formGroup: this.formGroup,
-            formControlName: 'lastName',
-            class: 'col-sm-6 col-xs-12',
-            label: 'Last Name *'
-          }
-        })
+      this.componentFactory.create(components.input, {
+        inputs: {
+          formGroup: this.formGroup,
+          formControlName: 'lastName',
+          class: 'col-sm-6 col-xs-12',
+          label: 'Last Name *'
+        }
+      })
       )
       .addField(
-        this.componentFactory.create(components.select, {
-          inputs: {
-            formGroup: this.formGroup,
-            formControlName: 'ageCategory',
-            class: 'col-sm-6 col-xs-12',
-            label: 'Age category *',
-            options: this.ageCategories
-          }
-        })
+      this.componentFactory.create(components.select, {
+        inputs: {
+          formGroup: this.formGroup,
+          formControlName: 'ageCategory',
+          class: 'col-sm-6 col-xs-12',
+          label: 'Age category *',
+          options: this.ageCategories
+        }
+      })
       )
       .addField(
-        this.componentFactory.create(components.radioSelect, {
-          inputs: {
-            formGroup: this.formGroup,
-            formControlName: 'sex',
-            class: 'col-sm-6 col-xs-12',
-            label: 'Sex *',
-            options: this.sexes
-          }
-        })
+      this.componentFactory.create(components.radioSelect, {
+        inputs: {
+          formGroup: this.formGroup,
+          formControlName: 'sex',
+          class: 'col-sm-6 col-xs-12',
+          label: 'Sex *',
+          options: this.sexes
+        }
+      })
       )
       .addField(
-        this.componentFactory.create(components.whisper, {
-          inputs: {
-            formGroup: this.formGroup,
-            formControlName: 'favoriteActivity',
-            class: 'col-xs-12',
-            label: 'Favorite Activity',
-            options: {
-              subject: this.activitiesChange
-            }
+      this.componentFactory.create(components.whisper, {
+        inputs: {
+          formGroup: this.formGroup,
+          formControlName: 'favoriteActivity',
+          class: 'col-xs-12',
+          label: 'Favorite Activity',
+          options: {
+            subject: this.activitiesChange
           }
-        })
+        }
+      })
       );
+  }
+
+  ngOnDestroy() {
+    this.ageCategoryChange.unsubscribe();
   }
 
   findActivities(id: string) {

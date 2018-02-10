@@ -3,10 +3,10 @@ function isFunction(fn) {
 }
 
 export function DynamicComponentUnsubscribeOnDestroy() {
-  return function(constructor: Function) {
+  return function (constructor: Function) {
     const original = constructor.prototype.ngOnDestroy;
 
-    constructor.prototype.ngOnDestroy = function() {
+    constructor.prototype.ngOnDestroy = function () {
       for (const prop in this) {
         if (this.hasOwnProperty(prop)) {
           const property = this[prop];

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, OnDestroy, Input, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { FormBuilderComponent } from '../../form-builder/form-builder.component';
@@ -10,7 +10,7 @@ const components = {
 };
 
 export class User {
-  constructor(public firstName: string = '', public lastName: string = '') {}
+  constructor(public firstName: string = '', public lastName: string = '') { }
 }
 
 @Component({
@@ -18,7 +18,7 @@ export class User {
   templateUrl: './user-form-no-reactive.component.html',
   styleUrls: ['./user-form-no-reactive.component.sass']
 })
-export class UserFormNoReactiveComponent implements OnInit, OnChanges {
+export class UserFormNoReactiveComponent implements OnInit, OnChanges, OnDestroy {
   @Input() user: User;
 
   @ViewChild('formBuilder') formBuilder: FormBuilderComponent;
@@ -27,7 +27,7 @@ export class UserFormNoReactiveComponent implements OnInit, OnChanges {
     this.user
   );
 
-  constructor(private componentFactory: ComponentFactory) {}
+  constructor(private componentFactory: ComponentFactory) { }
 
   ngOnChanges(changes) {
     if (changes.hasOwnProperty('user')) {
@@ -40,40 +40,44 @@ export class UserFormNoReactiveComponent implements OnInit, OnChanges {
 
     this.formBuilder
       .addField(
-        this.componentFactory.create(components.input, {
-          inputs: {
-            class: 'col-sm-6',
-            label: 'Firstname',
-            model: {
-              subject: this.userChanged,
-              property: 'firstName'
-            }
-          },
-          outputs: {
-            valueChange: {
-              subject: this.userChanged,
-              property: 'firstName'
-            }
+      this.componentFactory.create(components.input, {
+        inputs: {
+          class: 'col-sm-6',
+          label: 'Firstname',
+          model: {
+            subject: this.userChanged,
+            property: 'firstName'
           }
-        })
+        },
+        outputs: {
+          valueChange: {
+            subject: this.userChanged,
+            property: 'firstName'
+          }
+        }
+      })
       )
       .addField(
-        this.componentFactory.create(components.input, {
-          inputs: {
-            class: 'col-sm-6',
-            label: 'Lastname',
-            model: {
-              subject: this.userChanged,
-              property: 'lastName'
-            }
-          },
-          outputs: {
-            valueChange: {
-              subject: this.userChanged,
-              property: 'lastName'
-            }
+      this.componentFactory.create(components.input, {
+        inputs: {
+          class: 'col-sm-6',
+          label: 'Lastname',
+          model: {
+            subject: this.userChanged,
+            property: 'lastName'
           }
-        })
+        },
+        outputs: {
+          valueChange: {
+            subject: this.userChanged,
+            property: 'lastName'
+          }
+        }
+      })
       );
+  }
+
+  ngOnDestroy() {
+    this.userChanged.unsubscribe();
   }
 }
