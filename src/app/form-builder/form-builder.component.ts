@@ -9,6 +9,8 @@ import {
   Output
 } from '@angular/core';
 
+import { ComponentFactory } from '../component-factory/component-factory.service';
+
 @Component({
   selector: 'form-builder',
   templateUrl: './form-builder.component.html',
@@ -25,15 +27,17 @@ export class FormBuilderComponent implements OnDestroy {
   private formContent: ViewContainerRef;
   private componentRefs: ComponentRef<any>[] = [];
 
-  constructor() {}
+  constructor(private componentFactory: ComponentFactory) { }
 
   ngOnDestroy() {
     this.componentRefs.forEach(componentRef => componentRef.destroy());
   }
 
-  addField(component: any) {
-    this.formContent.insert(component.hostView);
-    this.componentRefs.push(component);
+  addField(component: any, bindings?) {
+    const componentRef = this.componentFactory.create(component, bindings);
+
+    this.formContent.insert(componentRef.hostView);
+    this.componentRefs.push(componentRef);
 
     return this;
   }

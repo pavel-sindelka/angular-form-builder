@@ -13,7 +13,9 @@ interface IBindings {
     };
   };
   outputs?: {
-    [propName: string]: {
+    [propName: string]:
+    | any
+    | {
       subject: BehaviorSubject<any>;
       property?: string;
     };
@@ -27,7 +29,7 @@ export class ComponentFactory {
     private injector: Injector
   ) { }
 
-  create(component, bindings?: IBindings) {
+  create(component: any, bindings?: IBindings) {
     const componentFactory = this.compiler.resolveComponentFactory(component);
     const componentRef = componentFactory.create(this.injector);
 
@@ -44,37 +46,41 @@ export class ComponentFactory {
     });
 
     if (bindings.hasOwnProperty('inputs')) {
-      Object.keys(bindings.inputs).forEach(key => {
-        const input = bindings.inputs[key];
+      Object.keys(bindings.inputs).forEach(property => {
+        const input = bindings.inputs[property];
         if (!input.hasOwnProperty('subject')) {
-          instance[key] = bindings.inputs[key];
+          instance[property] = bindings.inputs[property];
         } else {
           input.subject
             .takeUntil(instance[destroy])
             .subscribe(
             value =>
-              (instance[key] = input.property ? value[input.property] : value)
+              (instance[property] = input.property ? value[input.property] : value)
             );
         }
       });
     }
 
     if (bindings.hasOwnProperty('outputs')) {
-      Object.keys(bindings.outputs).forEach(key => {
-        const output = bindings.outputs[key];
-        instance[key]
-          .takeUntil(instance[destroy])
-          .subscribe(value => {
-            if (output.property) {
-              output.subject.next({
-                ...output.subject.getValue(),
-                [output.property]: value
-              });
-            } else {
-              output.subject.next(value);
-            }
-          });
-      });
+      Object.keys(bindings.outputs)
+        .filter(property => instance[property])
+        .forEach(property => {
+          const output = bindings.outputs[property];
+          const outputIsFunc = typeof output === 'function';
+
+          instance[property]
+            .takeUntil(instance[destroy])
+            .subscribe(outputIsFunc ? output : value => {
+              if (output.property) {
+                output.subject.next({
+                  ...output.subject.getValue(),
+                  [output.property]: value
+                });
+              } else {
+                output.subject.next(value);
+              }
+            });
+        });
     }
 
     return componentRef;

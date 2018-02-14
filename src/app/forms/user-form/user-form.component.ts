@@ -18,7 +18,6 @@ import {
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { FormBuilderComponent } from '../../form-builder/form-builder.component';
-import { ComponentFactory } from '../../component-factory/component-factory.service';
 import { IUser, UserService } from '../../user-service/user.service';
 
 import { InputReactiveComponent } from '../../fields/input-reactive/input-reactive.component';
@@ -64,11 +63,7 @@ export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
   );
   private ageCategoryChange;
 
-
-  constructor(
-    private fb: FormBuilder,
-    private componentFactory: ComponentFactory
-  ) {
+  constructor(private fb: FormBuilder) {
     this.formGroup = this.fb.group({
       id: new FormControl(),
       firstName: new FormControl(null, Validators.required),
@@ -83,7 +78,7 @@ export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.hasOwnProperty('user')) {
       const user = changes.user.currentValue;
       this.formGroup.setValue(user);
-      this.activitiesChange.next(this.findActivities(user.id));
+      this.activitiesChange.next(this.findActivities(user.ageCategory));
     }
   }
 
@@ -95,8 +90,7 @@ export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
       );
 
     this.formBuilder
-      .addField(
-      this.componentFactory.create(components.input, {
+      .addField(components.input, {
         inputs: {
           formGroup: this.formGroup,
           formControlName: 'firstName',
@@ -104,9 +98,7 @@ export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
           label: 'First Name *'
         }
       })
-      )
-      .addField(
-      this.componentFactory.create(components.input, {
+      .addField(components.input, {
         inputs: {
           formGroup: this.formGroup,
           formControlName: 'lastName',
@@ -114,9 +106,7 @@ export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
           label: 'Last Name *'
         }
       })
-      )
-      .addField(
-      this.componentFactory.create(components.select, {
+      .addField(components.select, {
         inputs: {
           formGroup: this.formGroup,
           formControlName: 'ageCategory',
@@ -125,9 +115,7 @@ export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
           options: this.ageCategories
         }
       })
-      )
-      .addField(
-      this.componentFactory.create(components.radioSelect, {
+      .addField(components.radioSelect, {
         inputs: {
           formGroup: this.formGroup,
           formControlName: 'sex',
@@ -136,9 +124,7 @@ export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
           options: this.sexes
         }
       })
-      )
-      .addField(
-      this.componentFactory.create(components.whisper, {
+      .addField(components.whisper, {
         inputs: {
           formGroup: this.formGroup,
           formControlName: 'favoriteActivity',
@@ -148,8 +134,7 @@ export class UserFormComponent implements OnInit, OnChanges, OnDestroy {
             subject: this.activitiesChange
           }
         }
-      })
-      );
+      });
   }
 
   ngOnDestroy() {

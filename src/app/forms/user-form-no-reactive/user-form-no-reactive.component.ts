@@ -39,8 +39,7 @@ export class UserFormNoReactiveComponent implements OnInit, OnChanges, OnDestroy
     this.userChanged.subscribe(user => (this.user = user));
 
     this.formBuilder
-      .addField(
-      this.componentFactory.create(components.input, {
+      .addField(components.input, {
         inputs: {
           class: 'col-sm-6',
           label: 'Firstname',
@@ -50,15 +49,13 @@ export class UserFormNoReactiveComponent implements OnInit, OnChanges, OnDestroy
           }
         },
         outputs: {
-          valueChange: {
-            subject: this.userChanged,
-            property: 'firstName'
-          }
+          valueChange: firstName => this.userChanged.next({
+            ...this.userChanged.getValue(),
+            firstName
+          })
         }
       })
-      )
-      .addField(
-      this.componentFactory.create(components.input, {
+      .addField(components.input, {
         inputs: {
           class: 'col-sm-6',
           label: 'Lastname',
@@ -73,8 +70,7 @@ export class UserFormNoReactiveComponent implements OnInit, OnChanges, OnDestroy
             property: 'lastName'
           }
         }
-      })
-      );
+      });
   }
 
   ngOnDestroy() {
